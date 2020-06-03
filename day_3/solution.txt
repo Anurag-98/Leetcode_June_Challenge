@@ -1,0 +1,58 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+//my own comparator that will be used in in-built sort,
+//it sorts on the basis of absolute difference between city A & city B
+
+ bool compare_according_to_abs_diff(vector<int> v1, vector<int> v2){
+        
+     int diff_v1 = abs(v1[0]-v1[1]);
+        
+     int diff_v2 = abs(v2[0]-v2[1]);
+    
+     // this sorts in descending order,(use '<' to sort in ascending order)
+     return (diff_v1 > diff_v2);
+}
+
+class Solution {
+    
+    public:
+    
+    
+    //complete the function below
+    
+    int twoCitySchedCost(vector<vector<int>>& costs) {
+        
+        //sorting on basis of absolute difference 
+        sort(costs.begin(),costs.end(),compare_according_to_abs_diff);
+        int city_A_count = 0;
+        int city_B_count = 0;
+        int n = costs.size()/2;
+        int total_min_cost = 0;
+        for(int i=0;i<costs.size();i++){
+            if(costs[i][0] < costs[i][1]){
+                if(city_A_count<n){
+                    
+                    city_A_count++;
+                    total_min_cost += costs[i][0];
+                    
+                }else{
+                    city_B_count++;
+                    total_min_cost += costs[i][1];
+                }
+            }else{
+                if(city_B_count<n){
+                    city_B_count++;
+                    total_min_cost += costs[i][1];
+                }else{
+                     city_A_count++;
+                    total_min_cost += costs[i][0];
+                }
+            }
+            
+        }
+        
+        return total_min_cost;
+        
+    }
+};
