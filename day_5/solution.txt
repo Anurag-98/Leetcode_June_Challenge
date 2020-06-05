@@ -1,0 +1,62 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    public:
+
+    //taking two variables
+    vector<int> index_to_weightSum;
+    int sum_cumulative;
+    
+    
+    //using this constructor to store cumulative sum w.r.t. their index
+    Solution(vector<int>& w) {
+        
+        sum_cumulative = w[0];
+        index_to_weightSum.push_back(sum_cumulative);
+        for(int i=1;i<w.size();i++){
+            sum_cumulative += w[i];
+            index_to_weightSum.push_back(sum_cumulative);
+        }
+
+    }
+    
+    //applying binary search(as cumulative array will always be sorted)
+    //to get the index from randomly picked weight 
+    int getting_index_from_binary_search(int random_value ){
+        
+        int start = 0;
+        int end = index_to_weightSum.size()-1;
+        while(start<end){
+            int mid = (start+end)/2;
+            if(index_to_weightSum[mid]<random_value){
+                start = mid + 1;
+            }else if(index_to_weightSum[mid]>random_value){
+                end = mid;
+            }else{
+                return mid;
+            }
+        }
+        
+        return start;
+    }
+    
+    //complete the function below
+    int pickIndex() {
+        
+        //first pick a random value between 1 to sum_cumulative
+        // this 1 is added as modulo will give num from 0 to sum_cumulative-1
+        //but we want value from 1 to sum_cumulative
+        int random_val = (rand() % sum_cumulative)+1;
+        
+        //then find the index corresponding to that random_value
+        return getting_index_from_binary_search(random_val);
+        
+    }
+};
+
+/**
+ * Your Solution object will be instantiated and called as such:
+ * Solution* obj = new Solution(w);
+ * int param_1 = obj->pickIndex();
+ */
