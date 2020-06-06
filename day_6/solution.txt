@@ -1,0 +1,78 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+//for implementing max priority queue comparator(making our own comparator)
+class comp{
+    public:
+    bool operator()(pair<int,int> const& p1,pair<int,int> const& p2 ){
+       
+        if(p1.first<p2.first){
+            
+            return true;
+            
+        }else if(p1.first>p2.first){
+            
+            return false;
+            
+        }else{
+            
+            // 1) If value of first property(which represents height h) is same,
+            //    then sort according to second property(k).
+            
+            // 2) Here least k(number of people) will be present first
+            //    when extracting element from queue if height is same!
+            return (p1.second > p2.second);
+        }
+    }
+};
+
+class Solution {
+    public:
+    
+    //complete the function below
+    vector<vector<int>> reconstructQueue(vector<vector<int>>& people) {
+        
+        
+        priority_queue<pair<int,int>,vector<pair<int,int>>,comp> pq;
+        
+        int n = people.size();
+        //-->loop for filling our priority queue with all input values.
+        for(int i=0;i<n;i++){
+            pair<int,int> p;
+            p.first = people[i][0];
+            p.second = people[i][1];
+            pq.push(p);
+        }
+        
+        //Vector for storing our result
+        vector<vector<int>> Final_Ans;
+        
+        while(!pq.empty()){
+            
+            //extracting maximum height, and min positioned entry from queue
+            pair<int,int> new_entry = pq.top();
+            pq.pop();
+            
+            int pos = new_entry.second;
+            
+            /*
+            creating vector of h,k which will serve as a entry,
+            for resulting(Final_Ans) array.
+            */
+            vector<int> v;
+            v.push_back(new_entry.first);
+            v.push_back(pos);
+            
+            // 1) inserting this entry at its correct position.
+            
+            // 2) if already some value is present at this position,
+            //   then latest entry will be inserted there, and rest
+            //   of entries adjust accordingly!
+            Final_Ans.insert(Final_Ans.begin() + pos,v);
+            
+            
+        }
+        
+        return Final_Ans;
+    }
+};
