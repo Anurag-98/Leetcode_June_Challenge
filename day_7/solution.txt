@@ -1,0 +1,114 @@
+class Solution {
+    public:
+    
+    /*
+            ||    Recursive Function to solve this problem     ||
+                
+    int recursive_coin_change_function(int*denominations,int numDenominations,int value){
+        
+        if(value==0){
+            return 1;
+        }
+
+        if(numDenominations==0){
+            return 0;
+        }
+
+        int op1 = 0,op2=0;
+        if(denominations[0]<=value){
+            op1 = recursive_coin_change_function(denominations,numDenominations,value-denominations[0]);
+        }
+
+        op2 = recursive_coin_change_function(denominations+1,numDenominations-1,value);
+
+        return op1+op2;
+    }
+    */
+    
+    int DP_Function(vector<int>&input,int n,int val){
+    
+        // if 0 amount is desired, it can be ahieved by only one way !
+        if(val==0){
+            return 1;
+        }
+        
+        //if no coin is available, change can't be made !
+        if(n==0){
+            return 0;
+        }
+        
+        // taking a 2-D matrix, where rows-->num of coins,
+        // col-->net_amount
+        int**dp = new int*[n+1]{};
+        for(int i=0;i<=n;i++){
+            dp[i] = new int[val+1]{};
+        }
+        
+        //as when val(amount) is 0 ans(possible ways) is 1
+        for(int i=0;i<=n;i++){
+            dp[i][0] = 1;
+        }
+
+        for(int i=1;i<=n;i++){
+            for(int j=1;j<=val;j++){
+                int op1=0,op2=0;
+                if(input[n-i]<=j){
+                    op1 = dp[i][j-input[n-i]];
+                }
+                op2 = dp[i-1][j];
+                dp[i][j] = op1+op2;
+            }
+        }
+        
+        // Final answer, which has stored the total
+        // number of ways to change the amount.
+        int ans = dp[n][val];
+        
+        //releasing the dynamically allocated memory!
+        for(int i=0;i<=n;i++){
+            delete [] dp[i];
+        }
+        delete [] dp;
+        
+        
+        return ans;
+    }
+
+    
+    //complete the function below
+    int change(int amount, vector<int>& coins) {
+        
+        /*
+             ||   RECURSIVE APPROACH     ||
+        
+        //--> 1) Taking a pointer to our vector, by using
+                 .data() function
+               
+         //--> 2) This function gives the address of array, which is
+                  is internally used by vector to store elements 
+               
+        int*denominations = coins.data();
+        
+        //-->size of vector(number of coins)
+        int numDenominations = coins.size();
+        
+        //-->calling our recursive function and returning its value
+        int recursive_ans = recursive_coin_change_function(denominations,numDenominations,amount);
+        return recursive_ans;
+        
+        */
+        
+        // There is lot of repetitve calls in recursive approach,
+        // thus the time limit will exceed in big inputs.
+        
+        
+       //        ||      DP APPROACH    || 
+        
+        int num_of_coins = coins.size();
+        
+        int DP_Solution = DP_Function(coins,num_of_coins,amount);
+        
+        return DP_Solution;
+        
+    }
+};
