@@ -1,0 +1,35 @@
+class Solution {
+    public:
+    
+    //complete the function below
+    bool isPowerOfTwo(int n) {
+        
+        if(n<=0){
+            return 0;
+        }
+
+        //      ||  Using Bit Manipulation   ||
+        
+        //  Note: The Bitwise and(&) operation of any number(n),
+        //        with its predecessor(n-1) changes the first set
+        //        bit(first '1' from right to left) to '0'.
+        
+        //  Explanation :
+        //               Any number which is power of 2, contains
+        //               only one '1' bit in its binary form. So taking
+        //               Bitwise and(&) with its predecessor will set the 
+        //               first '1' bit(from right to left) to zero('0').
+        //               Thus answer will always be zero in case of power of 2.
+        
+       
+        if( (n&(n-1)) ==0){
+           
+            return 1;
+       
+        }
+        
+        // It will execute when the 'if condition' fails
+        return 0;
+       
+    }
+};
