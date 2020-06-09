@@ -1,0 +1,39 @@
+class Solution {
+    public:
+    
+    //complete the function below
+    bool isSubsequence(string s, string t) {
+        
+        int count = s.size();
+        bool ans = false;
+        int curr_index_in_s = 0;
+        int found_len = 0;
+
+        
+        for(int i=0;t[i]!='\0';i++){
+            
+            //-->if we have found the s in t then, no need to check further.
+            //--> here we check if the found_len(ongoing length) matches the count(total length)
+            if(found_len==count){
+                ans = true;
+                break;
+            }
+            
+            // -->if the current char of s is found in t,
+            //    then we have to check for next char of s.
+            // -->Also we have to update our ongoing length(found_len)
+            if(t[i]==s[curr_index_in_s]){
+                curr_index_in_s++;
+                found_len++;
+            }
+        }
+        
+        //-->this extra check is for the case when last char is deciding one,
+        //    thus we exit the loop after last char, so to check for that case!
+        if(found_len==count){
+                return true;
+        }
+        
+        return ans;
+    }
+};
