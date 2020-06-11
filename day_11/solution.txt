@@ -1,0 +1,49 @@
+class Solution {
+    
+    public:
+    
+    //complete the function below
+    void sortColors(vector<int>& nums) {
+        
+        int num_of_zeros=0;
+        int num_of_ones=0;
+        int n = nums.size();
+
+        for(int i=0;i<n;i++){
+
+            if(nums[i]==0){
+            
+                num_of_zeros++;
+                
+            }else if(nums[i]==1){
+
+                num_of_ones++;
+                
+            }else{
+            
+                continue;
+            }
+
+        }
+
+        int j=0;
+        
+        while(j<num_of_zeros){
+          
+            nums[j]=0;
+            j++;
+        }
+
+        while( j < (num_of_zeros + num_of_ones) ){
+
+            nums[j]=1;
+            j++;
+        }
+
+        while(j<n){
+
+            nums[j]=2;
+            j++;
+        }
+    }
+};
