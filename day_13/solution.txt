@@ -1,0 +1,88 @@
+class Solution {
+    
+    public:
+    
+    //complete the function below
+    vector<int> largestDivisibleSubset(vector<int>& nums) {
+        
+        int n = nums.size();
+        
+        if(n==0){
+            
+            vector<int> blank;
+            return blank;
+        }
+        
+        if(n==1){
+            return nums;
+        }
+         
+        // sorting the input such that for every element,
+        // we will have to compare from smaller elements only.
+        sort(nums.begin(),nums.end());
+            
+        // This will keep a track of subset length ending at index i,
+        // -->(It is initialised with 1 as every element will form a subset)
+        vector<int> subset_count (n,1);
+        
+        // This will keep a track about the current element,
+        // such that to which subset's last element can this
+        // current element be appended to!
+        // [ Initialsing with INT_MIN as in begining no subset is tracked(created) ]
+        vector<int> tracking_subset_by_index (n,INT_MIN);
+        
+        // this variable will hold the index of the last
+        // element of solution's(Largest) subset!
+        int index_with_max_count = 0;
+        
+        for(int i=1;i<n;i++){
+            
+            for(int j=i-1;j>=0;j--){
+                
+                // if our i'th element is divisible(It can be considered for appending)
+                if(nums[i]%nums[j]==0){
+                    
+                    // Append the i'th element to j'th element's subset, if
+                    // this change makes the subset size bigger else not!
+                    if(subset_count[j] + 1 > subset_count[i]){
+                        
+                        // size will increase by 1 as one(i'th) element is added
+                        // in subset(of j'th) 
+                        subset_count[i] = subset_count[j] + 1;
+                        
+                        // Now store the index j, as our i'th element
+                        // will be a ending element of j'th subset! 
+                        tracking_subset_by_index[i] = j;
+                    }
+                }
+            }
+            
+            // Now after all above updates, we have the subset_count of i'th
+            // element. Just check wether this count is greater than the
+            // maximum count and if so, update accordingly!
+            if(subset_count[i]>subset_count[index_with_max_count]){
+                
+                // This index is the end of largest subset
+                index_with_max_count = i;
+            }
+        }
+        
+        
+        vector<int> solution_subset;
+        
+        int i = index_with_max_count;
+        
+        // Now we will traverse through the "tracking_subset_by_index" vector,
+        // and push the corresponding elements from our input to solution(solution_subset) vector!
+        // Note : [ This loop stops when it encounters INT_MIN by which we initialised our
+        //           "tracking_subset_by_index" vector ].
+        while(i>=0){
+            
+            solution_subset.push_back(nums[i]);
+            i = tracking_subset_by_index[i];
+        }
+        
+        return solution_subset;
+        
+    }
+};
