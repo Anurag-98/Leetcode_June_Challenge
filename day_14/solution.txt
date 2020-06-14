@@ -1,0 +1,63 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+    
+    public:
+    
+    //complete the function below
+    int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int K) {
+         
+        //Making adjecence List, to store all neighbours of every Node!
+        unordered_map<int,int> adjList[n];
+        
+        //Filling our adjecency List!
+        for(int i=0;i<flights.size();i++){
+            
+            int source = flights[i][0];
+            int destination = flights[i][1];
+            int weight = flights[i][2];
+            
+            adjList[source][destination] = weight;
+        }
+         
+        // Making Minimum Priority Queue!
+        // Note : (It will give us minimum weight element, thus saving our time)
+        priority_queue<vector<int>,vector<vector<int>> , greater<vector<int>> > pq;
+         
+        // Queue will have 3 elements: distance(weight), sourceNode & edge allowance!
+        //[Pushing the source node with net edge allowance!]
+        pq.push({0,src,K+1});
+        
+        
+        while(!pq.empty()){
+            
+            //Taking out min weight element from our Priority Queue!
+            vector<int> minWeightEntry = pq.top();
+            //And removing it from Queue.
+            pq.pop();
+            
+            int distance = minWeightEntry[0];
+            int sourceNode = minWeightEntry[1];
+            int EdgesLeft = minWeightEntry[2];
+            
+            //If the destination is reached
+            // Note : It will be automatically with min weight within edge allowance!)
+            if(sourceNode == dst){
+                return distance;
+            }
+            
+            // If edges are left, then check the direct neighbours of source node from adjacency List!
+            if(EdgesLeft>0){
+                for(auto j : adjList[sourceNode]){
+                    pq.push({distance + j.second,j.first,EdgesLeft-1});
+                }
+            }
+            
+        }
+
+        //If no possible path is possible with k+1 edge allowance!
+  	    return -1;
+    
+    }
+};
