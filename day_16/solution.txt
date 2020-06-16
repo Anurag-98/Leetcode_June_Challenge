@@ -1,0 +1,147 @@
+class Solution {
+    
+    public:
+    
+    // Checks for a given chunk, whether it is in IPv4 format or not
+    bool valid_chunk_Ipv4(string s){
+        
+        int n = s.size(); 
+        
+        // if length of passed chunk of string is more than 3 or
+        // blank then it is not valid !
+        if (n > 3 || n==0){
+            return false; 
+        }
+        
+        // check if the string only contains digits 
+        // if not then return false !
+        for (int i = 0; i < n; i++){
+            
+            if ((s[i] >= '0' && s[i] <= '9') == false){
+                return false; 
+            }
+        }
+         
+        // if the string is "00" or "001" or "05" etc then it is not valid 
+        // [A condition for checking trailing zeros]
+        if (s.find('0') == 0 && n > 1){ 
+            return false;
+        }
+        
+        // A method to convert the numerical string to integer!
+        stringstream geek(s); 
+        int x; 
+        geek >> x; 
+        
+        // The chunk is valid if the number generated is between 0 to 255 
+        return (x >= 0 && x <= 255); 
+    }
+    
+    // This function breaks the input into chunks, and send each chunk to
+    // to "valid_chunk_Ipv4" function for checking the chunk's validity!
+    bool check_Ipv4(string input){
+        
+        int start=0;
+        int i=0;
+        
+        for( i=0;input[i]!='\0';i++){
+            
+            //When '.' is encountered send the chunk of string behind it for validation
+            // to valid_chunk_Ipv4 function!
+            if(input[i]=='.'){
+                string small = input.substr(start,i-start);
+                if(!valid_chunk_Ipv4(small)){
+                    return false;
+                }
+                start=i+1;
+            }
+        }
+        
+        // This is for checking the last chunk after last dot!
+        string edgeCase = input.substr(start,i-start);
+        
+        return valid_chunk_Ipv4(edgeCase);
+    }
+    
+     bool valid_chunk_Ipv6(string s){
+        
+        int n = s.size(); 
+        
+         // if length of passed chunk of string is more than 4 or
+         //blank then it is not valid 
+        if (n > 4 || n==0) {
+            return false; 
+        }
+         
+        // check if the string only contains digits and alphabet from
+        // a to f or A to F if not then return false !
+        for (int i = 0; i < n; i++){
+            if ( ( (s[i] >= '0' && s[i] <= '9') || (s[i]>='a' && s[i]<='f') || (s[i]>='A' && s[i]<='F') ) == false ){ 
+                return false; 
+            }
+        }
+            
+         return true;
+    }
+    
+    bool check_Ipv6(string input){
+        
+        int start=0;
+        int i=0;
+       
+        for( i=0;input[i]!='\0';i++){
+            
+            //When ':' is encountered send the chunk of string behind it for validation
+            // to valid_chunk_Ipv6 function!
+            if(input[i]==':'){
+                string small = input.substr(start,i-start);
+                
+                if(!valid_chunk_Ipv6(small)){
+                    return false;
+                }
+                start=i+1;
+            }
+        }
+        
+       
+        // This is for checking the last chunk after last Colun!
+        string edgeCase = input.substr(start,i-start);
+        
+        return valid_chunk_Ipv6(edgeCase);
+        
+        
+    }
+    
+    // Complete the function Below
+    string validIPAddress(string IP) {
+        
+        int DotCount = 0,ColunCount=0;
+        
+        for(int i=0;IP[i]!='\0';i++){
+            if(IP[i]=='.'){
+                DotCount++;
+            }else if (IP[i] ==':'){
+                ColunCount++;
+            }
+        }
+        
+        
+        if(DotCount==3){
+            
+            if(check_Ipv4(IP)){
+                return "IPv4";
+            }
+            
+        }else if(ColunCount==7){
+           
+            if(check_Ipv6(IP)){
+                
+                return "IPv6";
+
+            }
+        }
+        
+        return "Neither";
+        
+    }
+};
