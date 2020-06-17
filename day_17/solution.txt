@@ -1,0 +1,100 @@
+class Solution {
+    
+    public:
+    
+    // A dfs approach to change neighbour(up,down,left,right) of unsafe(boundary) 'O' character,
+    // to any  other character say '@' so that in final matrix, the left over 'O' are safe & 
+    // hence can be converted to 'X'
+     void dfs_change_char(vector<vector<char>>&board,int x,int y,int total_rows,int total_cols){
+        
+         //changing the current unsafe 'O'
+         board[x][y] = '@';
+         
+         
+         //   ||    Visiting All neighbours using DFS  ||
+         
+         // down direction
+         if( (x+1)<total_rows && board[x+1][y]=='O' ){
+             dfs_change_char(board,x+1,y,total_rows,total_cols);
+         }
+          
+         // right direction
+         if( (y+1)<total_cols && board[x][y+1]=='O' ){
+             dfs_change_char(board,x,y+1,total_rows,total_cols);
+         }
+          
+         // up direction 
+         if( (x-1)>=0 && board[x-1][y]=='O' ){
+             dfs_change_char(board,x-1,y,total_rows,total_cols);
+         }
+          
+         //  left direction
+         if( (y-1)>=0 && board[x][y-1]=='O' ){
+             dfs_change_char(board,x,y-1,total_rows,total_cols);
+         }
+    }
+    
+    //Complete the function below!
+    void solve(vector<vector<char>>& board) {
+        
+        int row_count = board.size();
+        
+        // For blank input !
+        if(row_count==0){
+            return;
+        }
+        
+        int col_count = board[0].size();
+        
+        // For boundary columns!
+        for(int i=0;i<row_count;i++){
+            
+            //First Column
+            if(board[i][0]=='O'){
+                dfs_change_char(board,i,0,row_count,col_count);
+            }
+            
+            //Last Column
+            if(board[i][col_count-1]=='O'){
+                dfs_change_char(board,i,col_count-1,row_count,col_count);
+            }
+        }
+        
+        //For Boundary rows!
+        for(int j=0;j<col_count;j++){
+            
+            //First row
+            if(board[0][j]=='O'){
+                dfs_change_char(board,0,j,row_count,col_count);
+            }
+            
+            //Last row
+            if(board[row_count-1][j]=='O'){
+                
+                dfs_change_char(board,row_count-1,j,row_count,col_count);
+            }
+        }
+        
+        //All the unsafe 'O' has been changed to '@' at this point, Moving forward:
+        
+        //Now converting left 'O'(which are safely surrounded) to 'X',
+        // & changing back '@'(unsafe converted 'O') back to 'O' !
+        for(int i=0;i<row_count;i++){
+            for(int j=0;j<col_count;j++){
+                
+                if(board[i][j]=='@'){
+                   
+                    //changing unsafe 'O' which were converted to '@', back to 'O'
+                    board[i][j]='O';
+                    
+                }else if(board[i][j]=='O'){
+                   
+                    //These are safely surrounded 'O' which does not got converted!
+                    //We can change them to 'X' as asked in question!
+                    board[i][j]='X';
+                }
+            }
+        }
+        
+    }
+};
