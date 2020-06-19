@@ -1,0 +1,23 @@
+class Solution {
+    public:
+
+    // Complete the function below
+    int hIndex(vector<int>& citations) {
+
+        int n = citations.size();
+        //Last index
+        int index = n-1;
+
+        //Iterating from back, as we need highest h-index
+        while(index>=0){
+            
+            //If desired condition is satisfied, break from loop(solution index is found)!
+            if(citations[index]<n-index){
+                break;
+            }
+            index--;
+        }
+        
+        return (n-1)-index;
+    }
+};
