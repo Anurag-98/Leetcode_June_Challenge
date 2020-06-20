@@ -1,0 +1,67 @@
+class Solution {
+    
+    public:
+    
+    // A recursive function that will calculate corresponding string!
+    string help(int n,int k,vector<int>& fact,vector<int>& digits){
+        
+        //                Base case!
+        // If only 1 number is left, (convert the digit to string and return)
+        if(n==1){
+            string ans = to_string(digits[0]);
+            return ans;
+        }
+        
+        // Calculate the size of window, so that region in which first step is to be taken,
+        // can be found.
+        int range_window = fact[n-1];
+        
+        // Now calculate the region in which first step digit lies!
+        int region = (k-1)/range_window;
+        
+        // put this first step digit in our final string!
+        string finalAns = to_string(digits[region]);
+        
+        // Erase this digit, as it is being used!
+        digits.erase(digits.begin() + region);
+        
+        // Calculate the smaller 'k'th position that have to be worked upon
+        int small_k = k - (region*range_window);
+        
+        // Bring the left over answer from string and put it in a string, like 'smallAns' !
+        string smallAns = help(n-1,small_k,fact,digits);
+        
+        //attach this smallAns string to our final ans string
+        finalAns +=smallAns;
+         
+        // return the final answer!
+        return finalAns;
+        
+    }
+      
+    //Complete the function below
+    string getPermutation(int n, int k) {
+        
+        // Making a vector that will store factorial upto 9!
+        vector<int> fact(10,1);
+        
+        for(int i=1;i<10;i++){
+            fact[i] = i * fact[i-1];
+        }
+        
+        // Making a vector of n digits, from which answer will be made!
+        vector<int> digits(n,1);
+        
+        for(int i=0;i<n;i++){
+            digits[i] = i+1;
+        }
+        
+        // Use the recursive function above, to calculate answer!
+        string result = help(n,k,fact,digits); 
+        
+        // return the answer!
+        return result;
+    }
+    
+    
+};
