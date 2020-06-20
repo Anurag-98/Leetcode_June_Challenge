@@ -1,0 +1,73 @@
+class Solution {
+    public:
+    
+    int prime = 10000001;
+    vector<int> power;
+    
+    string rabin_karp(string&s,int len){
+        
+        if(len==0){
+            return "";
+        }
+        
+        int n = s.size();
+        int curr=0;
+        
+        unordered_map<int,vector<int>> map;
+        
+        for(int i=0;i<len;i++){
+            curr = (curr*26 + (s[i]-'a')) % prime;
+        }
+        
+        map[curr] = {0};
+        
+        for(int i=len;i<n;i++){
+            curr = ((curr-power[len-1] * (s[i-len]-'a')) % prime + prime) %prime;
+            curr = (curr * 26 + (s[i]-'a')) % prime;
+            
+            if(map.find(curr)==map.end()){
+                map[curr] = {i-len+1};
+            }else{
+                for(int index: map[curr]){
+                    string str = s.substr(i-len+1,len);
+                    if(s.substr(index,len)==str){
+                        return s.substr(index,len);
+                    }
+                    
+                    
+                }
+                map[curr].push_back({i-len+1});
+            }
+        }
+        
+        return "";
+        
+    }
+    
+    //Complete the function below
+    string longestDupSubstring(string S) {
+        int n = S.size();
+        int start = 0,end=n-1;
+        power = vector<int>(n);
+        power[0] = 1;
+        for(int i=1;i<n;i++){
+            power[i] = (power[i-1]*26)%prime;
+            
+        }
+        
+        string result;
+        while(start<=end){
+            int mid = (start+end)/2;
+            string current = rabin_karp(S,mid);
+            
+            if(current.size()>result.size()){
+                result = current;
+                start = mid+1;
+            }else{
+                end = mid-1;
+            }
+        }
+        
+        return result;
+    }
+};
