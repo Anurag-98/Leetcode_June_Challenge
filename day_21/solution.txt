@@ -1,0 +1,88 @@
+class Solution {
+
+    public:
+    
+    //Complete the function below!
+    int calculateMinimumHP(vector<vector<int>>& dungeon) {
+        
+        int rows = dungeon.size();
+        int cols = dungeon[0].size();
+        
+        // This dp's [i,j] cell represents minimum cost from this cell to last cell[last row,last col] 
+        int ** dp = new int*[rows];
+        
+        for(int i=0;i<rows;i++){
+            dp[i] = new int[cols];
+        }
+        
+        //               Deciding last cell's cost!
+        // explanation :(if last blocks value is greater than or equal to zero, we'll neeed 
+        //                a minimum of 1 health point, but if value was negative say -5 for example,
+        //                then we'll need 1 more than abs value of it i.e. 6 in our example )
+        if(dungeon[rows-1][cols-1]>=0){
+            dp[rows-1][cols-1] = 1;
+        }else{
+            dp[rows-1][cols-1] = 1 + abs(dungeon[rows-1][cols-1]);
+        }
+    
+        // Base Case last row
+        for(int j=cols-2;j>=0;j--){
+            
+            int val = dp[rows-1][j+1] - dungeon[rows-1][j];
+            
+            if(val>0){
+                dp[rows-1][j] = val;
+            }else{
+                dp[rows-1][j] = 1;
+            }
+            
+        }
+    
+        // Base Case last column
+        for(int i=rows-2;i>=0;i--){
+            
+            int val = dp[i+1][cols-1] - dungeon[i][cols-1];
+            
+            if(val>0){
+                dp[i][cols-1] = val;
+            }else{
+                dp[i][cols-1] = 1;
+            }
+            
+        }
+        
+        //--> working in a reverse manner, we'll see how much minimum cost is
+        //     needed by a cell[which will choose from two directions(bottom,right)] and
+        //     if that value turns out to be negative, then it implies, we don't need any extra 
+        //     health(just a minimum of 1 to survive) else we'll need that 'value' amount of health!
+        for(int i=rows-2;i>=0;i--){
+            
+            for(int j=cols-2;j>=0;j--){
+                
+                int val = min(dp[i+1][j],dp[i][j+1]) - dungeon[i][j];
+                
+                if(val>0){
+                    dp[i][j] = val;
+                }else{
+                    dp[i][j] = 1;
+                }
+                
+            }
+        }
+        
+        // --> The answer calculated was stored in fisrt cell(As we were working in bottom up(reverse)
+        //      manner), now assigning this value to a variable named answer!
+        int ans = dp[0][0];
+        
+        // Freeing the dynamically allocated space we used !
+        for(int i=0;i<rows;i++){
+            delete [] dp[i];
+        }
+        delete [] dp;
+        
+        //Returning our answer!
+        return ans;
+    
+        
+    }
+};
