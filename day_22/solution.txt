@@ -1,0 +1,65 @@
+class Solution {
+    public:
+    
+    //Complete the function below
+    int singleNumber(vector<int>& nums) {
+      
+        /*
+        //    ||     Using Hash Map     ||
+        //    [time complexity : O(N), space complexity : O(N)]
+        //Map to store occurance count of numbers!
+        unordered_map<int,int> map;
+        
+        int n = nums.size();
+        
+        //putting number occurances in map!
+        for(int i=0;i<n;i++){
+            map[nums[i]]++;
+        }
+        int ans;
+        //Itearting the element in maps & storing the element with one occurance in 
+        // ans variable!
+        for(auto it:map){
+            if(it.second==1){
+                ans = it.first;
+                break;
+            }
+        }
+        
+        return ans;
+        
+        */
+        
+        //      ||   Using Bit Manipulation   ||
+        //   [Time Complexity : O(N), Sapce Complexity : O(1)]
+        int result=0;
+        
+        // Checking for total positions a integer type number can hold i.e. 32 bits
+        for(int i=0; i<32; i++){ 
+            
+            // A variable that will store count of '1' bits at ith position
+            int count = 0;
+            
+            // now iterating through our input(nums) vector for counting '1' bits
+            // at ith position
+            for(int j=0; j<nums.size(); j++){ 
+                
+                if((nums[j] & (1<<i)) != 0){
+                    
+                    count++; 
+                }
+            }  
+            
+            // If this count is not divisible by 3 means it has extra occurance
+            // Hence our result's ith bit will be '1' else '0'
+            if ((count % 3) != 0){
+                               
+                result |= (1<<i); 
+            }
+            
+        } 
+        
+        // Return the formed number!
+        return result;        
+    }
+};
