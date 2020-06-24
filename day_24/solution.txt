@@ -1,0 +1,65 @@
+class Solution {
+    
+    public:
+    
+    //Complete the function below
+    int numTrees(int n) {
+        
+        //Only one tree is possible with one node
+        if(n==1){
+            
+            return 1;
+         }
+
+        // Only two trees possible[either 1 as root(and 2 as right child) or
+        //  2 as root(and 1 as left child)]
+        if(n==2){
+           
+            return 2;
+        }
+
+        // Taking an array, which will store the count of possible trees
+        //  [i'th index denotes count of trees with 'i' nodes]
+        long * ans = new long[n+1]{};
+        
+        //Filling base values
+        ans[0] = 1;
+        ans[1] = 1;
+        ans[2] = 2;
+        
+        
+        //This outer loop symbolises, filling ith index with net amount of trees
+        // possible with i nodes !
+        for(int i=3;i<=n;i++){
+            
+            long val =0;
+            
+            //This inner loop symbolises, fixing k as root and calculating total
+            // possibilities of trees with k as root!
+            // [And this whole process of k is done till k takes last value(i'th)]
+            
+            //   Note: Hence for e.g. say i was 3, then total count of trees with i(3) nodes
+            //         is sum of possibilities considering 1 as root, then 2 as root and 
+            //         finally 3 as root!
+            for(int k=1;k<=i;k++){
+
+                // Now when k is taken as root, then as it is a BST hence values
+                // smaller than k -->'k-1' values can be present on left and values greater 
+                // than k-->'i-k' values can be present on right !
+                val += (ans[k-1]*ans[i-k]);
+            }
+            
+            
+            ans[i] = val;
+        }
+        
+        //storing the final answer(count of trees with n nodes) in a result variable
+        long result = ans[n];
+        
+        //Freeing the dynamically used space!
+        delete [] ans;
+        
+        // returning our answer(result)
+        return result;
+    }
+};
