@@ -1,0 +1,104 @@
+class Solution {
+    public:
+    
+    // Complete the function below
+    int findDuplicate(vector<int>& nums) {
+        
+        /*                          APPROACH 1 :-
+        
+         (I) Using two nested for loops [Time Complexity: O(n^2), Space Complexity : O(1)]
+            
+            --> for each element,check every other element and if same found,then return!
+        */
+       
+        /*                          APPROACH 2 :-
+            
+         (II) Using sorting [Time Complexity : O(nlog(n)), Space Complexity : O(1) ]
+            
+            --> sort the array, Now traverse and keep checking every element from its previous
+                one
+        */
+        
+        /*                          APPROACH 3 :-
+        
+           (III) Using HashMap [ Time Complexity : O(n), Space Complexity : O(n)]
+           
+            --> Keep puuting new elements in map, whenever some already inserted 
+                element occurs(It means that is duplicate), return that element
+        */
+        
+        /*                          APPROACH 4 :-
+        
+         (IV) Using inbuilt array as Hashmap[Time complexity : O(n), Space Complexity : O(1)]
+         
+            --> As we are given that element will be in range from 1 to n and size of
+                array is n+1( Hence we will utilise this condition by taking array as map)
+                and last index will be n(as size of array is n+1) hence in range.
+                
+            --> Now we will mark value of every elements'index to negative(if it was initially
+                positive) if not(then it means) we have visited same index again(representing
+                duplicate) Hence we will return that index!
+                
+                int result;
+                for (i = 0; i < size; i++){ 
+                    
+                    if(nums[abs(nums[i])] >= 0){ 
+                        
+                        nums[abs(nums[i])] = -nums[abs(nums[i])]; 
+                    
+                    }else{
+                        
+                        result = abs(nums[i]);
+                        break;
+                        
+                    }
+                } 
+                return result;
+                
+            NOTE :-->  Here we are modifying the input nums array(in Question we're asked
+                        to not modify input array and take it as read only)!
+        */
+        
+        //                   APPROACH 5(BEST APPROACH)
+        
+        /*            [Time Complexity : O(n), Space Complexity : O(1) ]              */
+        
+        /*  Idea : Using floyd "Cycle Detection"
+                 
+                 1) we will maintain a slow and fast pointer, then slow will move by one pace
+                    whereas fast will move by two steps.They'll meet at a point in loop !
+                    [Loop will be surely present as minimum one element is guranteed repeating]
+                    
+                  2) Now this element is not surely the entrance point(from where loop starts),
+                     so we will now point the slow again to first element and fast will stay
+                     at that common point, but this time we'll iterate both of them at same pace!
+                     
+                  3) They'll now surely meet at entrance point and that point is the one causing
+                     cycle[duplicate element causes cycle]. We will return this element !
+        */
+            
+        int firstElement = nums[0];
+        int slow = nums[firstElement];
+        int fast = nums[nums[firstElement]];
+        
+        // step 1
+        while (slow != fast){
+          
+            slow = nums[slow];
+          
+            fast = nums[nums[fast]];
+        
+        }
+        
+        //step 2 
+        // Find the entrance(starting point) to the cycle.
+        slow = firstElement;
+        while (slow != fast) {
+          slow = nums[slow];
+          fast = nums[fast];
+        }
+        
+        //step 3
+        return fast;
+    }
+};
