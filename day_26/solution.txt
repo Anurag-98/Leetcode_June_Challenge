@@ -1,0 +1,106 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+    
+    public:
+    
+    /*
+                     My First Approach!
+            
+        1) store all the paths from root to leaf as a string in a vector
+        2) Then convert every string to integer and add the values
+        3) return the sum obtained above!
+            
+            
+    vector<string> allRootToLeafPaths(TreeNode * root){
+        
+        vector<string> result;
+        if(root==NULL){
+           return result;
+        }
+        
+        if(root->left==NULL && root->right==NULL){
+            string node_char;
+            node_char += (root->val + '0');
+            result.push_back(node_char);
+            return result;
+        }
+        
+        vector<string> lp = allRootToLeafPaths(root->left);
+        vector<string> rp = allRootToLeafPaths(root->right);
+        
+        for(int i=0;i<lp.size();i++){
+            result.push_back(lp[i]);
+        }
+        
+        for(int i=0;i<rp.size();i++){
+            result.push_back(rp[i]);
+        }
+        string currentChar;
+        currentChar += (root->val + '0');
+        for(int i=0;i<result.size();i++){
+            result[i] = currentChar + result[i];
+        }
+        
+        return result;
+    }
+    
+    // Complete the function below
+    int sumNumbers(TreeNode* root) {
+    
+        if(root==NULL){
+            return 0;
+        }
+        
+        vector<string> result_strings = allRootToLeafPaths(root);
+        
+        int sum = 0;
+        for(int i=0;i<result_strings.size();i++){
+            sum += stoi(result_strings[i]);
+        }
+        
+        return sum;
+    }
+    */
+    
+    // --------->    Better Approach
+    
+    // Function that'll pass the number formed going down and when leaf node is encountered,
+    //  it adds this number in total sum !
+    int helper(TreeNode* node,int oldSum){
+        
+        if(node==NULL){
+            return 0;
+        }
+        
+        if(node->right==NULL && node->left==NULL){
+            
+            return ( (oldSum*10) + (node->val) );
+            
+        }
+        
+        int leftTreeValuesSum = helper(node->right,oldSum*10+node->val);
+        int rightTreeValuesSum = helper(node->left,oldSum*10+node->val);
+        
+        int totalSum = leftTreeValuesSum + rightTreeValuesSum;
+        
+        return totalSum;
+    }
+    
+    // Complete the function below
+    int sumNumbers(TreeNode* root) {
+        
+        
+        int totalSum = helper(root,0);
+        return totalSum;
+    }
+};
