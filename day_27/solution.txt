@@ -1,0 +1,53 @@
+class Solution {
+    public:
+    
+    int numSquares(int n) {
+        
+        
+        // As it can be only made from that number of ones(1*1),
+        //   {other perfect squares after 1 starts from 4}
+        if(n<4){
+            
+            return n;
+        }
+        
+        // Take a dp array, that'll store minimum count of i'th number at i'th index !
+        int *dp = new int[n+1];
+        
+        //Filling base cases
+        dp[0] = 0;
+        dp[1] = 1;
+        dp[2] = 2;
+        dp[3] = 3;
+
+        // Fill dp array for every i'th number till n (desired number)
+        for(int i=4;i<=n;i++){
+            
+            int minVal = INT_MAX;
+            
+            // If j^2 is less than i, then only it can contribute as a factor in i's minimum count!
+            for(int j=1;j*j<=i;j++){
+                
+                // Now whatever be the count of the [i-(j*j)]'th term, 1 will be added for
+                // this (j*j) perfect square term in net answer!
+                int val = dp[i-(j*j)] + 1;
+                
+                // minVal will store the minimum value possibility out of all cases
+                if(val<minVal){
+                    minVal = val; 
+                }
+            }
+            
+            // Put that minValue as final answer for that i'th term in dp array!
+            dp[i] = minVal;
+        }
+        
+        // Freeing the dynamically used space!
+        int ans = dp[n];
+        delete [] dp;
+        
+        // Returning the answer (which holds minimum count of perfect squares
+        //                        from which n can be made)
+        return ans;
+    }
+};
