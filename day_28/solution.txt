@@ -1,0 +1,76 @@
+class Solution {
+    
+    public:
+    
+    void dfs(string current_key,unordered_map<string,priority_queue< string,vector<string>,
+             greater<string> >>& map, vector<string>& result ){
+         
+        // If that from this 'current_key' starting point has destinations
+        // from itself to other points then travel them first else not!
+        if(map.count(current_key)){
+            
+            while(!map[current_key].empty()){
+
+                // Picking the first destination point(which will automatically 
+                //                                      be lexographically minimum)
+                string next_key = map[current_key].top();
+                //Removing this from destinations!
+                map[current_key].pop();
+                
+                // Now asking recursion to cover all paths from this chosen destination!
+                dfs(next_key,map,result);
+
+            }
+        }
+        
+        // When all the itenary from the starting 'current_key' is done, we'll
+        // finally put this in result!
+        result.push_back(current_key);
+        
+    }
+    
+    //Complete the function below!
+    vector<string> findItinerary(vector<vector<string>>& tickets) {
+        
+        // We'll use an unordered map to store starting point as key,
+        // and minimum priority queue as value[to store multiple destinations,
+        //                                      in sorted(lexographical) order]
+        unordered_map<string,priority_queue< string,vector<string>,greater<string> >> map;
+        
+        // A vector that will store the result
+        vector<string> result;
+        
+        int n = tickets.size();
+        
+        if(n==0){
+            return result;
+        }
+        
+        // Loop for filling the map
+        for(int i=0;i<n;i++){
+            
+            // If some source(key) already exists, then add the destination entry
+            if(map.count(tickets[i][0])){
+                
+                map[tickets[i][0]].push(tickets[i][1]);
+                
+            }else{
+               //If new source country, then make a priority queue and push that 
+                // destination entry in it. Then put this queue in source as key !
+                priority_queue< string,vector<string>,greater<string> > pq;
+                pq.push(tickets[i][1]);
+                map[tickets[i][0]] = pq;
+            }
+        }
+        
+        // Call the dfs approach function(It'll cover all paths(itenary) but in reverse
+        //                                  order, as recursion is used )
+        dfs("JFK",map,result);
+        
+        // reversing the result vector, as we want it form "JFK" starting point!
+        reverse(result.begin(),result.end());
+        
+        return result;
+       
+    }
+};
