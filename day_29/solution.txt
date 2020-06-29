@@ -1,0 +1,48 @@
+class Solution {
+    public:
+    //Complete the function below
+    int uniquePaths(int m, int n) {
+        
+        //If only one column or row is present then answer will only be 1
+        // [as then it can go only down or right respectively]
+        if(n==1 || m==1){
+            return 1;
+        }
+        
+        //Taking a dp matrix of input dimensions!
+        int**dp = new int*[n];
+        for(int i=0;i<n;i++){
+            dp[i] = new int[m];
+        }
+        
+        // Base case, filling last row with '1' (only path will be right)
+        for(int j=0;j<m;j++){
+            dp[n-1][j]=1;
+        }
+        
+        // Base case, filling last column with '1' (only path will be down)
+        for(int i=0;i<n;i++){
+            dp[i][m-1]=1;
+        }
+        
+        //Approaching in bottom up manner (answer of a cell will be sum of paths
+        //                                 from either right or down cell)
+        for(int i=n-2;i>=0;i--){
+            for(int j=m-2;j>=0;j--){
+                dp[i][j] = dp[i+1][j] + dp[i][j+1];
+            }
+        }
+        
+        //Storing our final answer(number of paths from (0,0) to end(n-1,m-1))
+        int ans = dp[0][0];
+        
+        //Freeing the dynamically allocated space!
+        for(int i=0;i<n;i++){
+            delete [] dp[i];
+        }
+        delete [] dp;
+        
+        //Returning the answer!
+        return ans;
+    }
+};
